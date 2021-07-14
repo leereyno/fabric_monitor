@@ -83,7 +83,7 @@ centosversion: 7.9.2009
 1 row in set (0.00 sec)
 ```
 
-Info on one of the ports
+Info on one of the fabric devices
 
 ```
 fabricmon@monitordb [fabric_monitor]> select * from devices limit 1\G
@@ -93,4 +93,20 @@ fabricmon@monitordb [fabric_monitor]> select * from devices limit 1\G
   board_id: Intel Omni-Path Host Fabric Interface Adapter 100 Series
     fw_ver: 1.27.0
 updatetime: 1626227722
+```
+
+Info on one of the ports
+```
+fabricmon@monitordb [fabric_monitor]> select * from ports limit 1\G
+*************************** 1. row ***************************
+      uuid: 00000000-0000-0000-0000-0025905ECF9A
+    device: hfi1_0
+      port: 1
+       lid: 0xea
+link_layer: OmniPath
+phys_state: 5: LinkUp
+      rate: 100 Gb/sec (4X EDR)
+    sm_lid: 0x12
+     state: 4: ACTIVE
+updatetime: 1626228322
 ```
