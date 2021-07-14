@@ -45,7 +45,7 @@ create view combined as
 create view badports as
 
 	select
-		from_unixtime(updatetime) as updatetime,
+		updatetime,
 		hostname,
 		device,
 		port,
