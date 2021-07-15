@@ -1,17 +1,17 @@
 # Overview
 Shell script and MySQL/MariaDB database to help track the status of IB/OPA ports on compute nodes.
 
-There is nothing here that can't be obtained from the various infiniband troubleshooting tools:
+This is not a replacement for the various infiniband troubleshooting tools:
 
 https://linux.die.net/man/8/infiniband-diags
 
-The purpose of this code is to put this information into a database that can be easily queried.
+The purpose of this code is to put what each system thinks is its connection state into a database that can be easily queried.
 
 This is a quick and dirty project created in a couple of hours to help solve specific problems we're having with our IB fabric, so don't laugh too hard at the code.
 
 ## Caveats
 
-The system you run this on needs to have the MySQL/MariaDB client packages installed
+The systems you run this on need to have the MySQL/MariaDB client package installed
 
 ## Missing File
 
