@@ -56,5 +56,11 @@ create table ports
 	primary key (uuid,device,port)
 );
 
+create table firmware
+(
+	board_id varchar(100) not null,
+	fw_ver varchar(20) not null,
+	primary key (board_id, fw_ver)
+);
 
 
