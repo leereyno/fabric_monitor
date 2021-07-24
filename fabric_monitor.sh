@@ -150,11 +150,18 @@ for DEVICE in $(/bin/ls -1) ; do
 		FW_VER="0"
 	fi
 
+	if [ -e hca_type ] ; then
+		HCA_TYPE="$(cat hca_type)"
+	else
+		HCA_TYPE="0"
+	fi
+
 	DEVICEQUERY="replace into devices values
 	(\"$UUID\",
 	\"$DEVICE\",
 	\"$BOARD_ID\",
 	\"$FW_VER\",
+	\"$HCA_TYPE\",
 	\"$NOW\")"
 
 	if [ $DEBUGGER = true ] ; then

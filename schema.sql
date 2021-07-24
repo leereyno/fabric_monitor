@@ -36,6 +36,7 @@ create table devices
 	device char(20) not null,
 	board_id varchar(100) not null,
 	fw_ver varchar(20) not null,
+	hca_type varchar(40) not null,
 	updatetime int unsigned not null,
 	primary key ( uuid, device )
 );
