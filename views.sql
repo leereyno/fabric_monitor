@@ -8,6 +8,8 @@ use fabric_monitor;
 drop view if exists combined;
 drop view if exists badports;
 
+/* DENORMALIZED VIEW OF SYSTEM DATA */
+
 create view combined as
 
 	select
@@ -43,6 +45,8 @@ create view combined as
 	and
 		devices.device = ports.device;
 
+/* BAD PORTS */
+
 create view badports as
 
 	select
@@ -62,3 +66,19 @@ create view badports as
 	and
 		(phys_state != '5: LinkUp' or state != '4: ACTIVE')
 	order by hostname;
+
+/* FIRMWARE CHECK */
+
+create view fw_check as
+
+	select
+		combined.hostname,
+		 combined.device,
+		 combined.board_id,
+		 combined.fw_ver as loaded_fw,
+		 firmware.fw_ver as latest_fw
+	from
+		combined
+	inner join firmware
+		on combined.board_id = firmware.board_id and combined.fw_ver != firmware.fw_ver;
+
