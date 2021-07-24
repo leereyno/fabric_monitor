@@ -7,6 +7,7 @@ use fabric_monitor;
 
 drop view if exists combined;
 drop view if exists badports;
+drop view if exists fw_check;
 
 /* DENORMALIZED VIEW OF SYSTEM DATA */
 
@@ -76,9 +77,11 @@ create view fw_check as
 		 combined.device,
 		 combined.board_id,
 		 combined.fw_ver as loaded_fw,
-		 firmware.fw_ver as latest_fw
+		 latest_fw.fw_ver as latest_fw,
+		 combined.updatetime
 	from
 		combined
-	inner join firmware
-		on combined.board_id = firmware.board_id and combined.fw_ver != firmware.fw_ver;
+	inner join latest_fw
+		on combined.board_id = latest_fw.board_id and combined.fw_ver != latest_fw.fw_ver;
+
 
