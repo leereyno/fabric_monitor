@@ -51,7 +51,6 @@ create view combined as
 create view badports as
 
 	select
-		updatetime,
 		hostname,
 		device,
 		hca_type,
@@ -59,7 +58,8 @@ create view badports as
 		link_layer,
 		rate,
 		phys_state,
-		state 
+		state, 
+		updatetime
 	from 
 		combined 
 	where 
@@ -76,12 +76,16 @@ create view fw_check as
 		combined.hostname,
 		 combined.device,
 		 combined.board_id,
+		 combined.port,
+		 combined.link_layer,
 		 combined.fw_ver as loaded_fw,
 		 latest_fw.fw_ver as latest_fw,
 		 combined.updatetime
 	from
 		combined
 	inner join latest_fw
-		on combined.board_id = latest_fw.board_id and combined.fw_ver != latest_fw.fw_ver;
+		on combined.board_id = latest_fw.board_id and combined.fw_ver != latest_fw.fw_ver
+	order by
+		board_id,hostname;
 
 

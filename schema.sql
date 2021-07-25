@@ -60,6 +60,7 @@ create table latest_fw
 (
 	board_id varchar(100) not null,
 	fw_ver varchar(20) not null,
+	checkdate date not null,
 	primary key (board_id)
 );
 
