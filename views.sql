@@ -95,22 +95,22 @@ create view fw_check as
 create view bios_check as
 
 	select
-		combined.hostname,
-		combined.vendor,
-		combined.model,
-		combined.biosver as loaded_bios,
+		hosts.hostname,
+		hosts.vendor,
+		hosts.model,
+		hosts.biosver as loaded_bios,
 		latest_bios.biosver as latest_bios,
-		combined.updatetime
+		from_unixtime(hosts.updatetime) as updatetime
 	from
-		combined
+		hosts
 	inner join latest_bios on 
-		combined.vendor = latest_bios.vendor
+		hosts.vendor = latest_bios.vendor
 	and 
-		combined.model = latest_bios.model
+		hosts.model = latest_bios.model
 	and
-		combined.biosver != latest_bios.biosver
+		hosts.biosver != latest_bios.biosver
 	order by
-		combined.vendor,combined.model,combined.hostname;
+		hosts.vendor,hosts.model,hosts.hostname;
 
 
 
