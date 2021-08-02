@@ -67,4 +67,13 @@ create table latest_fw
 	primary key (board_id)
 );
 
+create table latest_bios
+(
+	vendor varchar(40) not null,                                                 
+   model varchar(40) not null,                                                  
+   biosvend varchar(40) not null,                                               
+   biosver varchar(20) not null,
+	checkdate date not null,
+	primary key(vendor,model)
+);
 

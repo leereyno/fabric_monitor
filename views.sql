@@ -8,6 +8,7 @@ use fabric_monitor;
 drop view if exists combined;
 drop view if exists badports;
 drop view if exists fw_check;
+drop view if exists bios_check;
 
 /* DENORMALIZED VIEW OF SYSTEM DATA */
 
@@ -90,5 +91,27 @@ create view fw_check as
 		on combined.board_id = latest_fw.board_id and combined.fw_ver != latest_fw.fw_ver
 	order by
 		board_id,hostname;
+
+create view bios_check as
+
+	select
+		combined.hostname,
+		combined.vendor,
+		combined.model,
+		combined.biosver as loaded_bios,
+		latest_bios.biosver as latest_bios,
+		combined.updatetime
+	from
+		combined
+	inner join latest_bios on 
+		combined.vendor = latest_bios.vendor
+	and 
+		combined.model = latest_bios.model
+	and
+		combined.biosver != latest_bios.biosver
+	order by
+		combined.vendor,combined.model,combined.hostname;
+
+
 
 
