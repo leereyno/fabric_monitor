@@ -81,6 +81,9 @@ centosversion: 7.9.2009
        vendor: SuperMacro
         model: big-bad-box
        serial: OU812
+     biosdate: 14/10/1066
+     biosvend: American Megatrends Inc.
+      biosver: 1.2.3.4
    infiniband: 0
      omnipath: 1
    updatetime: 1626227722
