@@ -58,6 +58,9 @@ KERNEL="$(uname -r)"
 VENDOR="$(cat /sys/devices/virtual/dmi/id/sys_vendor)"
 MODEL="$(cat /sys/devices/virtual/dmi/id/product_name)"
 SERIAL="$(cat /sys/devices/virtual/dmi/id/product_serial)"
+BIOSDATE="$(cat /sys/devices/virtual/dmi/id/bios_date)"
+BIOSVEND="$(cat /sys/devices/virtual/dmi/id/bios_vendor)"
+BIOSVER="$(cat /sys/devices/virtual/dmi/id/bios_version)"
 
 # If there is no infiniband directory, then this system has neither IB nor OPA
 if [ ! -d /sys/class/infiniband ] ; then
@@ -99,6 +102,9 @@ if [ $DEBUGGER = true ] ; then
 	echo $VENDOR
 	echo $MODEL
 	echo $SERIAL
+	echo $BIOSDATE
+	echo $BIOSVEND
+	echo $BIOSVER
 	echo $INFINIBAND
 	echo $OMNIPATH
 	echo $NOW
@@ -114,6 +120,9 @@ HOSTQUERY="replace into hosts values
 	\"$VENDOR\",
 	\"$MODEL\",
 	\"$SERIAL\",
+	\"$BIOSDATE\",
+	\"$BIOSVEND\",
+	\"$BIOSVER\",
 	\"$INFINIBAND\",
 	\"$OMNIPATH\",
 	\"$NOW\")"
