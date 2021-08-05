@@ -29,6 +29,7 @@ create table hosts
 	biosver varchar(20) not null,
 	infiniband BOOLEAN not null,
 	omnipath BOOLEAN not null,
+	opaversion varchar(40) not null,
 	updatetime int unsigned not null,
 	primary key ( uuid )
 );

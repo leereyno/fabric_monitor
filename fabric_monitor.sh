@@ -72,8 +72,10 @@ else
 	# hfi1_0 cards are always omnipath
 	if [ -e /sys/class/infiniband/hfi1_0 ] ; then
 		OMNIPATH="1"
+        OPAVERSION="$(opaconfig -V)"
 	else
 		OMNIPATH="0"
+        OPAVERSION="0"
 	fi
 
 	# Assume we do not have infiniband
@@ -107,6 +109,7 @@ if [ $DEBUGGER = true ] ; then
 	echo $BIOSVER
 	echo $INFINIBAND
 	echo $OMNIPATH
+    echo $OPAVERSION
 	echo $NOW
 fi
 
@@ -125,6 +128,7 @@ HOSTQUERY="replace into hosts values
 	\"$BIOSVER\",
 	\"$INFINIBAND\",
 	\"$OMNIPATH\",
+    \"$OPAVERSION\",
 	\"$NOW\")"
 
 if [ $DEBUGGER = true ] ; then
