@@ -42,13 +42,11 @@ create view combined as
 		ports.state,
 		from_unixtime(hosts.updatetime) as updatetime
 	from
-		hosts, devices, ports
-	where
+		hosts
+	left join devices on	
 		hosts.uuid = devices.uuid
-	and
-		devices.uuid = ports.uuid
-	and
-		devices.device = ports.device;
+	left join ports on 
+		( devices.uuid = ports.uuid and devices.device = ports.device );
 
 /* BAD PORTS */
 
