@@ -66,13 +66,20 @@ BIOSVER="$(cat /sys/devices/virtual/dmi/id/bios_version)"
 if [ ! -d /sys/class/infiniband ] ; then
 	INFINIBAND="0"
 	OMNIPATH="0"
+    OPAVERSION="0"
 else
 	# There is an infiniband directory, so we need to do extra work
 
 	# hfi1_0 cards are always omnipath
 	if [ -e /sys/class/infiniband/hfi1_0 ] ; then
 		OMNIPATH="1"
-        OPAVERSION="$(opaconfig -V)"
+
+        OPAVERSION=$(rpm -q --queryformat "%{VERSION}\n" opa-basic-tools)
+
+        if [ $? -ne 0 ] ; then
+            OPAVERSION="ERROR GETTING OPAVERSION"
+        fi
+
 	else
 		OMNIPATH="0"
         OPAVERSION="0"

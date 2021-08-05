@@ -29,6 +29,7 @@ create view combined as
 		hosts.biosver,
 		hosts.infiniband,
 		hosts.omnipath,
+		hosts.opaversion,
 		devices.device,
 		devices.board_id,
 		devices.fw_ver,
