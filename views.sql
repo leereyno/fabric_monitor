@@ -9,6 +9,7 @@ drop view if exists combined;
 drop view if exists badports;
 drop view if exists fw_check;
 drop view if exists bios_check;
+drop view if exists host_ips;
 
 /* DENORMALIZED VIEW OF SYSTEM DATA */
 
@@ -112,5 +113,25 @@ create view bios_check as
 		hosts.vendor,hosts.model,hosts.hostname;
 
 
+create view host_ips as 
 
+	select
+		hosts.hostname,
+		ip_info.uuid,
+		ip_info.ifname,
+		ip_info.mac,
+		ip_info.ip,
+		ip_info.netmask,
+		ip_info.duplex,
+		ip_info.mtu,
+		ip_info.operstate,
+		ip_info.speed,
+		from_unixtime(ip_info.updatetime) as updatetime
+	from
+		hosts
+	inner join ip_info on
+		hosts.uuid = ip_info.uuid
+	order by
+		hosts.hostname,ip_info.ifname;
+	
 

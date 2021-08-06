@@ -12,6 +12,7 @@ use fabric_monitor;
 drop table if exists hosts;
 drop table if exists devices;
 drop table if exists ports;
+drop table if exists ip_info;
 
 create table hosts
 (
@@ -77,4 +78,20 @@ create table latest_bios
 	checkdate date not null,
 	primary key(vendor,model)
 );
+
+create table ip_info
+(
+	uuid char(40) not null,
+	ifname varchar(40) not null,
+	mac varchar(80) not null,
+	ip varchar(20) not null,
+	netmask varchar(20) not null,
+	duplex varchar(40) not null,
+	mtu integer unsigned not null,
+	operstate varchar(20) not null,
+	speed integer unsigned not null,
+	updatetime int unsigned not null,
+	primary key (uuid, ifname)
+);
+
 

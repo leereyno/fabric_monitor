@@ -149,98 +149,144 @@ fi
 # Get device and port information
 ###################################
 
-# No possible IB ports?  We're done
-if [ ! -d /sys/class/infiniband ] ; then
-	exit 0
-fi
+# Process all IB ports
+if [ -d /sys/class/infiniband ] ; then
 
-cd /sys/class/infiniband
+	cd /sys/class/infiniband
 
-DEVICEROOT=$(pwd)
+	DEVICEROOT=$(pwd)
 
-for DEVICE in $(/bin/ls -1) ; do
+	for DEVICE in $(/bin/ls -1) ; do
 
-	cd $DEVICE
+		cd $DEVICE
 
-	BOARD_ID=$(cat board_id)
+		BOARD_ID=$(cat board_id)
 
-	if [ -e fw_ver ] ; then
-		FW_VER="$(cat fw_ver)"
-	else
-		FW_VER="0"
-	fi
-
-	if [ -e hca_type ] ; then
-		HCA_TYPE="$(cat hca_type)"
-	else
-		HCA_TYPE="0"
-	fi
-
-	DEVICEQUERY="replace into devices values
-	(\"$UUID\",
-	\"$DEVICE\",
-	\"$BOARD_ID\",
-	\"$FW_VER\",
-	\"$HCA_TYPE\",
-	\"$NOW\")"
-
-	if [ $DEBUGGER = true ] ; then
-		echo $DEVICEQUERY
-		$MyConn "$DEVICEQUERY" 
-	else
-		$MyConn "$DEVICEQUERY" &> /dev/null
-	fi
-
-	########################
-	## Get port Information
-	########################
-
-	cd ports
-
-	PORTROOT=$(pwd)
-
-	for PORT in $(/bin/ls -1) ; do
-
-		cd $PORT
-
-		LID="$(cat lid)"
-
-		if [ "$DEVICE" = "hfi1_0" ] ; then
-			LINK_LAYER="OmniPath"
+		if [ -e fw_ver ] ; then
+			FW_VER="$(cat fw_ver)"
 		else
-			LINK_LAYER="$(cat link_layer)"
+			FW_VER="0"
 		fi
 
-		PHYS_STATE="$(cat phys_state)"
-		RATE="$(cat rate)"
-		SM_LID="$(cat sm_lid)"
-		STATE="$(cat state)"
-		
-		
-		PORTQUERY="replace into ports values
+		if [ -e hca_type ] ; then
+			HCA_TYPE="$(cat hca_type)"
+		else
+			HCA_TYPE="0"
+		fi
+
+		DEVICEQUERY="replace into devices values
 		(\"$UUID\",
 		\"$DEVICE\",
-		\"$PORT\",
-		\"$LID\",
-		\"$LINK_LAYER\",
-		\"$PHYS_STATE\",
-		\"$RATE\",
-		\"$SM_LID\",
-		\"$STATE\",
+		\"$BOARD_ID\",
+		\"$FW_VER\",
+		\"$HCA_TYPE\",
 		\"$NOW\")"
 
 		if [ $DEBUGGER = true ] ; then
-			echo $PORTQUERY
-			$MyConn "$PORTQUERY" 
+			echo $DEVICEQUERY
+			$MyConn "$DEVICEQUERY" 
 		else
-			$MyConn "$PORTQUERY" &> /dev/null
+			$MyConn "$DEVICEQUERY" &> /dev/null
 		fi
 
-		cd $PORTROOT
+		########################
+		## Get port Information
+		########################
+
+		cd ports
+
+		PORTROOT=$(pwd)
+
+		for PORT in $(/bin/ls -1) ; do
+
+			cd $PORT
+
+			LID="$(cat lid)"
+
+			if [ "$DEVICE" = "hfi1_0" ] ; then
+				LINK_LAYER="OmniPath"
+			else
+				LINK_LAYER="$(cat link_layer)"
+			fi
+
+			PHYS_STATE="$(cat phys_state)"
+			RATE="$(cat rate)"
+			SM_LID="$(cat sm_lid)"
+			STATE="$(cat state)"
+			
+			
+			PORTQUERY="replace into ports values
+			(\"$UUID\",
+			\"$DEVICE\",
+			\"$PORT\",
+			\"$LID\",
+			\"$LINK_LAYER\",
+			\"$PHYS_STATE\",
+			\"$RATE\",
+			\"$SM_LID\",
+			\"$STATE\",
+			\"$NOW\")"
+
+			if [ $DEBUGGER = true ] ; then
+				echo $PORTQUERY
+				$MyConn "$PORTQUERY" 
+			else
+				$MyConn "$PORTQUERY" &> /dev/null
+			fi
+
+			cd $PORTROOT
+
+		done
+
+		cd $DEVICEROOT
+		
+	done
+fi
+
+# Get IP info
+if [ -d /sys/class/net ] ; then
+
+	cd /sys/class/net
+
+	DEVICEROOT=$(pwd)
+
+	for DEVICE in $(/bin/ls -1) ; do
+
+		cd $DEVICE 2>/dev/null
+
+        if [ $? -eq 0 ] ; then
+
+            MAC=$(cat address)
+            IP=$(ip a s $DEVICE | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | cut -d' ' -f2)
+            NETMASK=$(ip a s $DEVICE | grep 'inet ' | egrep -o '/[0-9]{1,3}')
+            DUPLEX=$(cat duplex 2>/dev/null)
+            MTU=$(cat mtu 2>/dev/null)
+            OPERSTATE=$(cat operstate 2>/dev/null)
+            SPEED=$(cat speed 2>/dev/null)
+
+            DEVICEQUERY="replace into ip_info values
+            (\"$UUID\",
+            \"$DEVICE\",
+            \"$MAC\",
+            \"$IP\",
+            \"$NETMASK\",
+            \"$DUPLEX\",
+            \"$MTU\",
+            \"$OPERSTATE\",
+            \"$SPEED\",
+            \"$NOW\")"
+
+            if [ $DEBUGGER = true ] ; then
+                echo $DEVICEQUERY
+                $MyConn "$DEVICEQUERY" 
+            else
+                $MyConn "$DEVICEQUERY" &> /dev/null
+            fi
+        fi
+		
+		cd $DEVICEROOT
 
 	done
 
-	cd $DEVICEROOT
-	
-done
+fi
 
