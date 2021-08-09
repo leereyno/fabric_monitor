@@ -101,6 +101,13 @@ else
 	done
 fi
 
+# Find out whether smt (hyperthreading) is turned on
+if [ -e /sys/devices/system/cpu/smt/active ] ; then
+	SMT=$(cat /sys/devices/system/cpu/smt/active)
+else
+	SMT=0
+fi
+
 if [ $DEBUGGER = true ] ; then
 	echo $UUID
 	echo $FULLHOSTNAME
@@ -116,7 +123,8 @@ if [ $DEBUGGER = true ] ; then
 	echo $BIOSVER
 	echo $INFINIBAND
 	echo $OMNIPATH
-    echo $OPAVERSION
+   echo $OPAVERSION
+	echo $SMT
 	echo $NOW
 fi
 
@@ -135,7 +143,8 @@ HOSTQUERY="replace into hosts values
 	\"$BIOSVER\",
 	\"$INFINIBAND\",
 	\"$OMNIPATH\",
-    \"$OPAVERSION\",
+   \"$OPAVERSION\",
+	\"$SMT\",
 	\"$NOW\")"
 
 if [ $DEBUGGER = true ] ; then
