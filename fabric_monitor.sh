@@ -105,7 +105,7 @@ fi
 if [ -e /sys/devices/system/cpu/smt/active ] ; then
 	SMT=$(cat /sys/devices/system/cpu/smt/active)
 else
-	SMT=0
+	SMT=2 # Means we do not know
 fi
 
 if [ $DEBUGGER = true ] ; then
